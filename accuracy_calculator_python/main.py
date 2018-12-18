@@ -32,7 +32,7 @@ def findsun(imagee):
         return sun
     
     else:
-        return False
+        return -1
     
 # Function to identify which pixels are severely affected by the Sun, radius = 170 has been set arbitrarily
 def circle(x,y,midx,midy,radius):
@@ -49,7 +49,8 @@ def segmentation(imagename):
     im = Image.open(imagename)
     img = np.array(im)
 
-    [midx,midy] = findsun(imagename)
+    if findsun(imagename) != -1:
+        [midx,midy] = findsun(imagename)
 
     radius = 170
 
@@ -57,7 +58,7 @@ def segmentation(imagename):
         for j in range(0,1286):
             if img[i][j][0] < 15 and img[i][j][1] < 15 and img[i][j][2] < 22: # This condition for undefined has been set arbitrarily too
                 img[i][j] = [255,0,0]
-            if circle(i,j,midx,midy,radius): # Condition for Sun, which we consider as undefined too
+            if findsun(imagename) != -1 and circle(i,j,midx,midy,radius): # Condition for Sun, which we consider as undefined too
                 img[i][j] = [255,0,0]
                                   
     new_image = [[0 for x in range(1286)] for y in range(1286)]
